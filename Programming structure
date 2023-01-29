@@ -1,1 +1,23 @@
-
+measurements <- data.frame(Freq = c(0.6, 0.3, 0.4, 0.4, 0.2, 0.6, 0.3, 0.4, 0.9, 0.2),
+                           BP = c(103, 87, 32, 42, 59, 109, 78, 205, 135, 176),
+                           First = c(1, 1, 1, 1, 0, 0, 0, 0, NA, 1),
+                           Second = c(0, 0, 1, 1, 0, 0, 1, 1, 1, 1),
+                           FinalDecision = c(0, 1, 0, 1, 0, 1, 0, 1, 1, 1))
+measurements
+measurements$First <- ifelse(measurements$First == 1, "bad", "good")
+head(measurements, 1)
+measurements$Second <- ifelse(measurements$Second == 1, "high", "low")
+measurements$FinalDecision <- ifelse(measurements$FinalDecision == 1, "high", "low")
+measurements
+measurementsUpdated <- data.frame(measurements$BP, measurements$First, measurements$Second, measurements$FinalDecision)
+colnames(measurementsUpdated) <- c("BP", "First", 'Second', 'FinalDecision')
+measurementsUpdated
+library(reshape2)
+measurementsUpdated_melted <- melt(measurementsUpdated, id = "BP")
+measurementsUpdated_melted
+library(ggplot2)
+plot1 <- ggplot(measurementsUpdated_melted, aes(BP, variable, fill = value)) + coord_flip() + geom_boxplot()
+plot2 <- ggplot(measurementsUpdated_melted, aes(BP, fill = value, color = variable)) + geom_histogram()
+library(patchwork)
+# In case you don’t know what a patchwork package is, you can use it to plot multiple ggplots in one graph.
+plot1 + plot2
