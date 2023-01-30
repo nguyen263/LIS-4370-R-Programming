@@ -5,3 +5,8 @@ Poll_Results <- data.frame("Candidate" = candidateName,
            "ABC Election Results" = ABC,
            "CBS Election Results" = CBS)
 Poll_Results
+ABCMean <- mean(Poll_Results$ABC.Election.Results)
+ABCMean
+CBSMean <- mean(Poll_Results$CBS.Election.Results)
+CBSMean
+(ABCMean + CBSMean)/2
