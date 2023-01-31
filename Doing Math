@@ -12,5 +12,5 @@ solve(A)
 det(B)
 # There is a requirement that a matrix must be square, which means that it must have the same number of rows and columns to have determinants.
 # Look at matrix A; it has a determinant since both rows and columns have the same number.
-# Now, returning to the displayed error message, the reason being that the matrix is not square (aka non-square matrix), that is, it has more columns than rows, as a result, which can result in there being no determinant; this means that no inverse exists.
+# Now, returning to the displayed error message, the reason being that the matrix is not square (aka non-square matrix), that is, it has more columns than rows; as a result, there is no determinant; this means that no inverse exists.
 solve(B)
