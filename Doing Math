@@ -17,3 +17,8 @@ det(B)
 # Look at matrix A; it has a determinant since both rows and columns have the same number.
 # Now, returning to the displayed error message, the reason being that the matrix is not square (aka non-square matrix), that is, it has more columns than rows; as a result, there is no determinant; this means that no inverse exists.
 solve(B)
+
+
+
+## IMPORTANT note for owner: ##
+## The real answer key is in my RStudio
