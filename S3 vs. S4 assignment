@@ -1,0 +1,93 @@
+# Load the women dataset
+women
+# Assign the 7th row of "women" to "info"
+info <- women[7,]
+# To see the data, call "info"
+info
+# Affix Alice to "name"
+name <- "Alice"
+
+# A list of components is passed as 'info', which contains 'name,' 'height,' and 'weight'
+info <- list(name = name, height = info$height, weight = info$weight)
+# "Info" is the class of info
+class(info) <- "Info"
+# Assign the previous line to infoClass
+infoClass <- class(info)
+info
+
+# Set the S4 class using setClass()
+# The slots are defined with infoClass; "name" as a character, "height" as a numeric, and "weight" as a numeric
+setClass(infoClass, slots = list(name = "character", height = "numeric", weight = "numeric"))
+# Assign the 12th row of "women" to "info2"
+info2 <- women[12,]
+# Use new() to create a specific instance or object of S4 with infoClass filled with a value for name, height, and weight and assign it to the infoNew variable
+infoNew <- new(infoClass, name = name, height = info2$height, weight = info2$weight)
+infoNew
+
+# Check to see if my data set qualifies for S3 and S4
+# 1. How do you tell what OO system (S3 vs. S4) an object is associated with?
+# Find out an object's type using the sloop package
+library(sloop)
+otype(info)
+otype(infoNew)
+
+# 2. How do you determine the base type (like integer or list) of an object?
+# Return the object's type using class() or typeof()
+class(info$name)
+class(info2$height)
+typeof(info$weight)
+typeof(info2$weight)
+
+# 3. What is a generic function?
+# A generic function returns the result of a function that takes one or more input arguments
+
+# 4. What are the main differences between S3 and S4?
+# S3 supports the overloading of functions, making it easy to use since it does not restrict the ability to change the class of existing objects
+# The S4 approach is a strict and formal one due to the restrictions on the data, so I cannot modify existing objects easily, so it is challenging to use.
+
+# 5. In your GitHub, create two examples of S3 and S4. Post each step you took to create and test the two functions: UseMethod() and setGeneric()
+# I dislike this part because it's difficult
+# create two examples of S3
+# UseMethod()
+# Example 1
+f <- function(object) {
+  print(name)
+  UseMethod("f")
+}
+f.default <- function(object) {
+  cat("Her height is", object$height, ", and her weight is", object$weight)
+}
+f(info)
+
+# Example 2
+f1 <- function(object) {
+  UseMethod("f1")
+}
+f1.default <- function(object) {
+  cat(name, ", I have what you need. I have measured your height to be", object$height, "and your weight to be", object$weight, "pounds.")
+}
+f1(info2)
+
+# Provide two examples of S4
+# Ex. 1
+# Set the height slot using setGeneric()
+setGeneric("height", function(object) standardGeneric("height"))
+setGeneric("height<-", function(object, value) standardGeneric("height<-"))
+# Define methods with setMethod()
+setMethod("height", infoClass, function(object) object@height)
+setMethod("height<-", infoClass, function(object, value) {
+  object@height <- value
+  object
+})
+height(infoNew) <- 60
+height(infoNew)
+
+# Ex. 2
+setGeneric("Info", function(object) standardGeneric("Info"))
+setMethod("Info", infoClass, function(object) {
+  cat("You're", object@height, "tall and", object@weight, "pounds,", name)
+})
+Info(infoNew)
+
+# determine whether generic functions could be implemented on both S3 and S4 data
+# As you can see above, UseMethod() and setGeneric() were used successfully, so the answer is basically yes.
