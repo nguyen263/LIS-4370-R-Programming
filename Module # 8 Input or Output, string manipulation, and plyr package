@@ -1,0 +1,41 @@
+# I was instructed to run the plyr package with the imported assignment and export the files as a table and CSV
+
+# pryr, ISLR, and boot packages are required
+# plyr and data.table packages must be loaded
+require(pryr)
+require(ISLR)
+require(boot)
+library(data.table)
+library(plyr)
+# Return the current working directory to continue working on this assignment instead of using setwd()
+getwd()
+# Assign the imported assignment to student_assignment
+# sep = "," - Make R recognize commas as white space
+student_assignment <- read.table("Assignment 6 Dataset.txt", header = T, sep = ",")
+# To see the data, call "student_assignment"
+student_assignment
+
+# The ddply() function comes from the plyr package
+# "Sex" was sorted by using transform
+# Add a column titled "Average Grade" and list the average grade
+studentAvgGrade <- ddply(student_assignment, "Sex", transform, "Average Grade" = mean(Grade))
+studentAvgGrade
+# The column "Sex" should be assigned to "sex"
+sex <- student_assignment$Sex
+# Calculate the mean for "Sex"
+mean(sex)
+# Make a table of studentAvgGrade and add it to the file and give it the title studentAvgGrade
+write.table(studentAvgGrade, file = "studentAvgGrade")
+
+# Filter the "Name" of studentAvgGrade containing letter i
+# The grepl command returns true or false
+# ignore.case = T - ignores uppercase or lowercase
+i_students <- subset(studentAvgGrade, grepl("i", studentAvgGrade$Name, ignore.case = T))
+i_students
+# Make a table and CSV of i_students and add them to the file named i_students
+# sep = "," - Separate elements with commas
+write.table(i_students, "i_students", sep = ",")
+write.csv(i_students, "i_students.csv")
+
+# I am thankful that I learned this plyr package and the functions it contains because I have been using the same libraries since last semester.
+# This semester, I hope to learn as many new packages as possible in this class and others.
