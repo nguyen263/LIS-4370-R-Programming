@@ -1,1 +1,34 @@
+# Set the working directory
+setwd("/Users/loannguyen/Documents/R files/LIS 4370 – R programming")
+# Assign imported data to "df"
+df <- read.csv("CartelStability.csv")
+# Display the first few rows of df
+head(df)
+# First column removed
+df <- df[,-1]
+# Activate the stringr package
+library(stringr)
+# Each word is converted to upper case for the first letter, and to lower case for the rest of the letters using str_to_title from stringr
+# Column names in uppercase and lowercase
+colnames(df) <- str_to_title(colnames(df))
+colnames(df)
+library(stringi)
+# Changes all matching characters to new ones
+df$Cartel <- stri_replace_all_regex(df$Cartel, c("yes", "no"), c("Yes", "No"), vectorize = F)
+df$Ice <- stri_replace_all_regex(df$Ice, c("yes", "no"), c("Yes", "No"), vectorize = F)
+# Reclassify the specified variable as a factor variable to a limited number of values
+df$Price <- factor(df$Price)
+df$Cartel <- factor(df$Cartel)
+df$Season <- factor(df$Season)
+df$Ice <- factor(df$Ice)
+# last few rows displayed
+tail(df)
 
+# Use base R to create a graph
+boxplot(Quantity ~ Price, df, main = "Cartels determine quantity based on prices", las = 2, names = c(.125, .15, .2, .25, .3, .35, .4), col = rainbow(7))
+
+library(ggplot2)
+ggplot(df, aes(Quantity, Price)) + geom_boxplot(fill = rainbow(7)) + labs(title = "Cartels determine quantity based on prices") + theme(plot.title = element_text(hjust = 0.5)) + coord_flip()
+
+library(lattice)
+bwplot(Quantity ~ Price, df, main = "Cartels determine quantity based on prices", xlab = "Price")
