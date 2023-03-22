@@ -1,0 +1,76 @@
+---
+title: 'Module # 12 R Markdown'
+author: "Loan Nguyen"
+date: "3/21/23"
+output: html_document
+---
+
+---
+
+### ***An instruction***
+Create a time series using gglpot2 and discuss the findings
+
+---
+
+### ***Load the libraries***
+Add the necessary libraries
+
+```{r}
+library(DAAG)
+library(stringr)
+library(reshape2)
+library(ggplot2)
+```
+
+### ***Load the data***
+Using any dataset from any website or package or creating your own
+
+```{r}
+data(greatLakes)
+data <- greatLakes
+```
+
+### ***Data munging***
+Clean the data however you want, or don't clean it if it isn't necessary
+
+```{r}
+# rename columns
+colnames(data)
+colnames(data) <- str_to_title(colnames(data))
+colnames(data) <- paste("Lake", colnames(data))
+colnames(data)[4] <- "Lake St. Clair"
+colnames(data)[2] <- "Lake Michigan-Huron"
+
+# Create a data frame containing "Year" and data
+data <- data.frame(Year = c(1918:2009), data)
+
+# Transform the data in long format using the specified column name as the id parameter
+melted <- melt(data, id = "Year")
+# view the first few rows of melted
+head(melted)
+
+# Find the row numbers that meet the condition
+rownames(melted)[which(melted$variable == "Lake.Ontario",)]
+# Remove the rows
+melted2 <- melted[-c(185:276),]
+# Keeping rows
+melted3 <- melted[c(185:276),]
+```
+
+### ***Create a plot***
+Graph time series
+
+```{r}
+a <- ggplot(melted2, aes(Year, value, color = variable)) + geom_line() + ylab("Average Depth (m)") + geom_smooth(method = "lm", size = .5, linetype = "dashed") + annotate("text", x = 2000, y = 177.5, label = "dashed line = lm")
+b <- ggplot(melted3, aes(Year, value, color = variable)) + geom_line() + ylab("Average Depth (m)") + scale_color_manual(values = "purple") + geom_smooth(method = "lm", size = .5, linetype = "dashed")
+library(patchwork)
+a + theme(legend.position = "bottom", legend.key.size = unit(.7, 'cm')) +
+  guides(color = guide_legend(nrow = 2, byrow = T)) +
+  b + theme(legend.position = "bottom", legend.key.size = unit(.7, 'cm')) +
+  plot_annotation("Average Depth of Lakes", theme = theme(plot.title = element_text(hjust = 0.5)))
+```
+
+### ***Analysis***
+Review the graph and discuss your findings: Do you notice any patterns?
+
+> It’s shocking that Lake Ontario’s water level is low compared to the other three lakes. With the regression lines added, I can see trends by looking at their slope. The slope of Lake Michigan-Huron is slightly positive, while the slope of the other two lakes has the same slope, so I can safely assume that their average water levels in the future will gradually increase. It is evident that Lake Ontario has a very positive slope; this is bad because I can say with certainty that the average depth of Lake Ontario will increase rapidly, like two or three times compared to its normal level, in the future.
